@@ -1,10 +1,26 @@
-- name: change linux root password
+- name: centos update
   hosts: all
+  sudo: true
   tasks:
-  - name: install updates
-    yum: 
-      name='*' 
-      state=present
-    ignore_errors: yes
-    environment:
+    - name: upgrade all packages
+      yum: name=* state=latest
+      environment:
           http_proxy: http://192.168.200.24:3128
+
+    - name: Check for reboot hint.
+      shell: LAST_KERNEL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,""); print $1}'); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
+      ignore_errors: true
+      register: reboot_hint
+
+    - name: Rebooting ...
+      command: shutdown -r now "Reboot required for updated kernel"
+      async: 0
+      poll: 0
+      sudo: true
+      ignore_errors: true
+      when: reboot_hint.stdout.find("reboot") != -1
+      register: rebooting
+
+    - name: Wait for thing to reboot...
+      pause: seconds=60
+      when: rebooting|changed
