@@ -20,7 +20,3 @@
       ignore_errors: true
       when: reboot_hint.stdout.find("reboot") != -1
       register: rebooting
-
-    - name: Wait for thing to reboot...
-      pause: seconds=60
-      when: rebooting|changed
