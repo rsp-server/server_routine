@@ -4,21 +4,26 @@
   tasks:
   - name: Update and upgrade apt packages
     become: true
+    become_user: root
     apt:
       upgrade: yes
     environment:
       http_proxy: http://192.168.200.24:3128
       
-  - name: Check for reboot hint.
-      shell: LAST_KERNEL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,""); print $1}'); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
-      ignore_errors: true
-      register: reboot_hint
+  - name: Autoremove unused packages
+    command: apt-get -y autoremove
+    register: apt_result
+    changed_when: "'packages will be REMOVED' in apt_result.stdout"      
+      
+  - name: Reboot box if kernel/libs updated and requested by the system
+    shell: sleep 10 && /sbin/shutdown -r now 'Rebooting box to update system libs/kernel as needed' 
+    args:
+        removes: /var/run/reboot-required
+    async: 300
+    poll: 0
+    ignore_errors: true
 
-    - name: Rebooting ...
-      command: shutdown -r now "Reboot required for updated kernel"
-      async: 0
-      poll: 0
-      sudo: true
-      ignore_errors: true
-      when: reboot_hint.stdout.find("reboot") != -1
-      register: rebooting
+  - name: Wait for system to become reachable again
+    wait_for_connection:
+        delay: 60
+        timeout: 300
