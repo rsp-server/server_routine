@@ -6,4 +6,4 @@
       user: 
         name: root
         update_password: always 
-        password: pass123!
+        password: $6$rounds=656000$LFrHktX7Bcx0BwfH$OwBwqMPESMVDt6Gx7SuvmbKp1HAq5Q62JGvUMfPvnTeSs5S5bokKwsXoZG511JHtPpOyM8rBTdNDmqeyV03/i.
