@@ -1,8 +1,5 @@
--name: update centos servers
+- name: change linux root password
   hosts: all
-  remote_user: root
-  sudo: yes
-
   tasks:
   - name: install updates
     yum: state=present name='*'
