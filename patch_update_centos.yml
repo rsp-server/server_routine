@@ -2,9 +2,7 @@
   hosts: all
   tasks:
     - name: update the system
-        yum: update
-          name: "*"
-          state: latest
+        yum: name=* state=latest
         environment:
           http_proxy: http://192.168.200.24:3128
     - name: restart system to reboot to newest kernel
@@ -21,8 +19,6 @@
           delay: 5
           timeout: 60
     - name: update the system
-        yum: update
-          name: "*"
-          state: latest
+        yum: name=* state=latest
         environment:
           http_proxy: http://192.168.200.24:3128
