@@ -1,10 +1,10 @@
 -name: update centos servers
-- hosts: all
+  hosts: all
   remote_user: root
   sudo: yes
 
   tasks:
-  - name: install epel-release
+  - name: install updates
     yum: state=present name='*'
     environment:
           http_proxy: http://192.168.200.24:3128
