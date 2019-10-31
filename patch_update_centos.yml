@@ -1,24 +1,10 @@
-- name: patch update centos servers
-  hosts: all
+-name: update centos servers
+- hosts: all
+  remote_user: root
+  sudo: yes
+
   tasks:
-    - name: update the system
-        yum: name=* state=latest
-        environment:
-          http_proxy: http://192.168.200.24:3128
-    - name: restart system to reboot to newest kernel
-        shell: "sleep 5 && reboot"
-        async: 1
-        poll: 0
-    - name: wait for 60 seconds
-        pause:
-          seconds: 60
-    - name: wait for the system to reboot
-        wait_for_connection:
-          connect_timeout: 20
-          sleep: 5
-          delay: 5
-          timeout: 60
-    - name: update the system
-        yum: name=* state=latest
-        environment:
+  - name: install epel-release
+    yum: state=present name='*'
+    environment:
           http_proxy: http://192.168.200.24:3128
