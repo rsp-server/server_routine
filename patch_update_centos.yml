@@ -2,7 +2,7 @@
   hosts: all
   tasks:
     - name: update the system
-        yum:
+        yum: update
           name: "*"
           state: latest
         environment:
@@ -21,7 +21,7 @@
           delay: 5
           timeout: 60
     - name: update the system
-        yum:
+        yum: update
           name: "*"
           state: latest
         environment:
