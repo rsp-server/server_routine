@@ -5,6 +5,8 @@
         yum:
           name: "*"
           state: latest
+        environment:
+          http_proxy: http://192.168.200.24:3128
     - name: restart system to reboot to newest kernel
         shell: "sleep 5 && reboot"
         async: 1
@@ -22,3 +24,5 @@
         yum:
           name: "*"
           state: latest
+        environment:
+          http_proxy: http://192.168.200.24:3128
