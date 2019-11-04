@@ -3,8 +3,6 @@
   sudo: true
   tasks:
   - name: Update and upgrade apt packages
-    become: true
-    become_user: root
     apt:
       upgrade: yes
     environment:
